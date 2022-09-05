@@ -27,4 +27,9 @@ public class ResponseDTO {
         this.message = string2;
         this.obj = response;
     }
+
+    public ResponseDTO(String string3, String errMsg) {
+        this.message = string3;
+        this.obj = errMsg;
+    }
 }
