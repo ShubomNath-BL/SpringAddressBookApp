@@ -3,6 +3,7 @@ package com.example.newadderessbook.service;
 import com.example.newadderessbook.dto.AddressDTO;
 import com.example.newadderessbook.entity.AddressEntity;
 import com.example.newadderessbook.repo.Repo;
+import com.example.newadderessbook.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class AddressService implements IAddressService{
 
     @Autowired
     Repo repository;
+
+    @Autowired
+    TokenUtil tokenUtil;
     public String welcomeMessage(){
         return "Welcome to the Address book";
     }
@@ -55,5 +59,25 @@ public class AddressService implements IAddressService{
 
     public List<AddressEntity> getUserByEmail(String email){
         return repository.findByEmail(email);
+    }
+
+    public String addRecord(AddressDTO adress) throws Exception{
+        AddressEntity newAddress = new AddressEntity(adress);
+        repository.save(newAddress);
+        String token = tokenUtil.createToken(newAddress.getUserId());
+        return token;
+    }
+
+    public List<AddressEntity> retrieveData(String token){
+        long id = tokenUtil.decodeToken(token);
+        Optional<AddressEntity> isUserExist = repository.findById(id);
+        if(isUserExist.isPresent()){
+            List<AddressEntity> list = repository.findAll();
+            return list;
+        }
+        else {
+            System.out.println("Token not found");
+            return null;
+        }
     }
 }

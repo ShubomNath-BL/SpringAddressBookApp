@@ -64,4 +64,21 @@ public class AddressController {
         ResponseDTO responseDTO = new ResponseDTO("User details with given email id is: ", addressList);
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @PostMapping("/post")
+    public ResponseEntity<String> addData(@Valid @RequestBody AddressDTO adress) throws Exception{
+        String token = service.addRecord(adress);
+        ResponseDTO responseDTO = new ResponseDTO("Record added successfully", token);
+        return new ResponseEntity(responseDTO, HttpStatus.CREATED);
+
+    }
+
+    @CrossOrigin
+    @GetMapping("/retrive/{token}")
+    public ResponseEntity<ResponseDTO> getData(@PathVariable String token){
+        List<AddressEntity> response = service.retrieveData(token);
+        ResponseDTO responseDTO = new ResponseDTO("Record retrieved successfully:-", response);
+        return new ResponseEntity(responseDTO, HttpStatus.OK);
+    }
 }

@@ -20,4 +20,8 @@ public interface IAddressService {
     public AddressEntity deleteData(long id);
 
     public List<AddressEntity> getUserByEmail(String email);
+
+    public String addRecord(AddressDTO adress) throws Exception;
+
+    public List<AddressEntity> retrieveData(String token);
 }
