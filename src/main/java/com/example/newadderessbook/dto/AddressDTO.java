@@ -15,12 +15,12 @@ public class AddressDTO {
     private String fullName;
     @Pattern(regexp = "^[1-9]{2}[0-9]{10}$", message = "Invalid Phone number")
     private String phoneNumber;
-//    @NotBlank(message = "email should not be blank")
-    private List<String> email;
+    @NotBlank(message = "email should not be blank")
+    private String email;
     @NotBlank(message = "address should not be blank")
     private String address;
-    @NotBlank(message = "city should not be blank")
-    private String city;
+//    @NotBlank(message = "city should not be blank")
+    private List<String> city;
     @NotBlank(message = "state should not be blank")
     private String state;
 //    @Pattern(regexp = "^[0-9]{5,}$", message = "Invalid Zip Code")

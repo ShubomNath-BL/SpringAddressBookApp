@@ -2,7 +2,9 @@ package com.example.newadderessbook.service;
 
 import com.example.newadderessbook.dto.AddressDTO;
 import com.example.newadderessbook.entity.AddressEntity;
+import com.example.newadderessbook.exception.AddressException;
 import com.example.newadderessbook.repo.Repo;
+import com.example.newadderessbook.util.EmailSenderService;
 import com.example.newadderessbook.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class AddressService implements IAddressService{
 
     @Autowired
     TokenUtil tokenUtil;
+
+    @Autowired
+    EmailSenderService sender;
     public String welcomeMessage(){
         return "Welcome to the Address book";
     }
@@ -52,19 +57,27 @@ public class AddressService implements IAddressService{
         else return null;
     }
 
-    public AddressEntity deleteData(long id){
-        repository.deleteById(id);
-        return null;
+    @Override
+    public void deleteData(long id){
+        Optional<AddressEntity> newAddress = repository.findById(id);
+        if(newAddress.isPresent()){
+            repository.deleteById(id);
+            sender.sendEmail(newAddress.get().getEmail(),"TestMail...!","Hello... Your data has been deleted");
+        }else {
+            throw new AddressException("Id not found....!");
+        }
     }
 
-    public List<AddressEntity> getUserByEmail(String email){
-        return repository.findByEmail(email);
+    public List<AddressEntity> getUserByCity(String city){
+        return repository.findByCity(city);
     }
 
     public String addRecord(AddressDTO adress) throws Exception{
         AddressEntity newAddress = new AddressEntity(adress);
         repository.save(newAddress);
         String token = tokenUtil.createToken(newAddress.getUserId());
+        sender.sendEmail(String.valueOf(newAddress.getEmail()),"TestMail...!","Hello..."+newAddress.getFullName()+" http://localhost:8080/findByToken/"+token);
+
         return token;
     }
 
@@ -78,6 +91,17 @@ public class AddressService implements IAddressService{
         else {
             System.out.println("Token not found");
             return null;
+        }
+    }
+
+    @Override
+    public AddressEntity findByToken(String token) {
+        long id = tokenUtil.decodeToken(token);
+        Optional<AddressEntity> addressEntity = repository.findById(id);
+        if(addressEntity.isPresent()){
+            return addressEntity.get();
+        }else {
+            throw new AddressException("Id not found");
         }
     }
 }

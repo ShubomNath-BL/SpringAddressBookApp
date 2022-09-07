@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface Repo extends JpaRepository<AddressEntity, Long> {
 
-    @Query(value = "select * from addressbookapp.address,addressbookapp.user_email where address.user_id=user_email.id and email= :email", nativeQuery = true)
-    List<AddressEntity> findByEmail(String email);
+    @Query(value = "select * from addressbookapp.address,addressbookapp.city where address.user_id=city.id and city= :city", nativeQuery = true)
+    List<AddressEntity> findByCity(String city);
 }

@@ -17,11 +17,13 @@ public interface IAddressService {
 
     public AddressEntity editData(AddressDTO address, long id);
 
-    public AddressEntity deleteData(long id);
+    public void deleteData(long id);
 
-    public List<AddressEntity> getUserByEmail(String email);
+    public List<AddressEntity> getUserByCity(String city);
 
     public String addRecord(AddressDTO adress) throws Exception;
 
     public List<AddressEntity> retrieveData(String token);
+
+    public AddressEntity findByToken(String token);
 }

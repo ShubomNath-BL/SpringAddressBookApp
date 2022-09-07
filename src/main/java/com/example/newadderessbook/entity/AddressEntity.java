@@ -19,14 +19,15 @@ public class AddressEntity {
     private String fullName;
     private String phoneNumber;
     private String address;
-    private String city;
+
+    @ElementCollection
+    @CollectionTable (name = "city", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "city")
+    private List<String> city;
     private String state;
     private String zipCode;
 
-    @ElementCollection
-    @CollectionTable (name = "user_email", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "email")
-    private List<String> email;
+    private String email;
 
     public AddressEntity(AddressDTO address) {
         this.fullName = address.getFullName();

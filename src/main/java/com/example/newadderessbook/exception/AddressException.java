@@ -7,4 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressException extends RuntimeException{
     private String message;
+
+    public AddressException(String message) {
+        this.message=message;
+    }
 }

@@ -53,14 +53,16 @@ public class AddressController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("delete/{id}")
-    public AddressEntity deleteUserData(@PathVariable long id){
-        return service.deleteData(id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ResponseDTO> deleteUserData(@PathVariable long id){
+          service.deleteData(id);
+        ResponseDTO responseDTO = new ResponseDTO("User details has been deleted: ", "Deleted id: "+id);
+        return new ResponseEntity<>(responseDTO,HttpStatus.GONE);
     }
 
-    @GetMapping("/getByEmail/{email}")
-    public ResponseEntity<ResponseDTO> getUserByEmail(@PathVariable String email){
-        List<AddressEntity> addressList = service.getUserByEmail(email);
+    @GetMapping("/getByCity/{city}")
+    public ResponseEntity<ResponseDTO> getUserByCity(@PathVariable String city){
+        List<AddressEntity> addressList = service.getUserByCity(city);
         ResponseDTO responseDTO = new ResponseDTO("User details with given email id is: ", addressList);
         return new ResponseEntity<>(responseDTO,HttpStatus.OK);
     }
@@ -79,6 +81,13 @@ public class AddressController {
     public ResponseEntity<ResponseDTO> getData(@PathVariable String token){
         List<AddressEntity> response = service.retrieveData(token);
         ResponseDTO responseDTO = new ResponseDTO("Record retrieved successfully:-", response);
+        return new ResponseEntity(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("findByToken/{token}")
+    public ResponseEntity<ResponseDTO> findByToken(@PathVariable String token){
+        AddressEntity addressEntity = service.findByToken(token);
+        ResponseDTO responseDTO = new ResponseDTO("Record retrieved by id successfully:-", addressEntity);
         return new ResponseEntity(responseDTO, HttpStatus.OK);
     }
 }
